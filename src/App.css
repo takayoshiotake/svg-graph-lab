@@ -29,8 +29,6 @@
   text-align: center;
 }
 #grapharea svg {
-  width: 800px;
-  height: 600px;
   margin: 16px;
   background-color: gray;
 }
