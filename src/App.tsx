@@ -33,9 +33,17 @@ function App() {
     }
     setItems(newItems);
   }, [items]);
+  const alignAllItems = useCallback(() => {
+    items.forEach((item) => {
+      item.cx = Math.min(Math.max(Math.round(item.cx / 12) * 12, 12), 800 - 12);
+      item.cy = Math.min(Math.max(Math.round(item.cy / 12) * 12, 12), 600 - 12);
+    });
+    setItems([...items]);
+  }, [items]);
   const clearAllItems = useCallback(() => {
     setItems([]);
   }, []);
+
   const selectItem = useCallback(
     (index: number) => {
       if (selectedItemIndexes.includes(index)) {
@@ -115,6 +123,7 @@ function App() {
       </g>,
     );
   });
+
   return (
     <>
       <div id="actionbar">
@@ -123,6 +132,9 @@ function App() {
         </button>
         <button onClick={addAllItems} disabled={items.length >= 20}>
           Add All
+        </button>
+        <button onClick={alignAllItems} disabled={items.length == 0}>
+          Align
         </button>
         <button onClick={clearAllItems} disabled={items.length == 0}>
           Clear
