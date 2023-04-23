@@ -146,6 +146,22 @@ function App() {
         onMouseUp={handleMouseUp}
       >
         <svg viewBox="0 0 800 600" width={800} height={600}>
+          {[...Array(Math.round(800 / 12)).keys()].map((x) => {
+            return (
+              <path
+                d={`M${x * 12 - 0.5},0 V600`}
+                stroke="rgba(0, 0, 0, 0.12)"
+              ></path>
+            );
+          })}
+          {[...Array(Math.round(600 / 12)).keys()].map((y) => {
+            return (
+              <path
+                d={`M0,${y * 12 - 0.5} H800`}
+                stroke="rgba(0, 0, 0, 0.12)"
+              ></path>
+            );
+          })}
           {graph}
         </svg>
       </div>
