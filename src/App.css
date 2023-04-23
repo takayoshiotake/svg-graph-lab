@@ -34,3 +34,9 @@
   margin: 16px;
   background-color: gray;
 }
+#grapharea svg > g {
+  cursor: pointer;
+}
+#grapharea svg > g > * {
+  user-select: none;
+}
