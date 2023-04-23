@@ -46,7 +46,7 @@ function App() {
     [selectedItemIndexes],
   );
   const handleMouseMove = useCallback(
-    (event: MouseEvent<SVGElement>) => {
+    (event: MouseEvent<HTMLDivElement>) => {
       event.preventDefault();
       if (event.movementX == 0 && event.movementY == 0) {
         return;
