@@ -35,9 +35,26 @@ function App() {
     setItems([]);
   }, []);
 
-  const graph = items.map((item, index) => {
-    return (
-      <g key={index} transform={`translate(${item.cx}, ${item.cy})`}>
+  const graph: JSX.Element[] = [];
+  items.forEach((item, index) => {
+    if (index > 0) {
+      const x0 = items[index - 1].cx;
+      const y0 = items[index - 1].cy;
+      const x1 = items[index].cx;
+      const y1 = items[index].cy;
+      graph.push(
+        <path
+          key={index * 2 + 0}
+          d={`M${x0},${y0 + 12}
+              Q${x0},${y0 + 36} ${(x0 + x1) / 2},${(y0 + y1) / 2}
+              Q${x1},${y1 - 36} ${x1},${y1 - 12}`}
+          fill="none"
+          stroke="black"
+        ></path>,
+      );
+    }
+    graph.push(
+      <g key={index * 2 + 1} transform={`translate(${item.cx}, ${item.cy})`}>
         <rect
           x="-12"
           y="-12"
@@ -50,25 +67,9 @@ function App() {
         <text textAnchor="middle" dominantBaseline="central">
           {index + 1}
         </text>
-      </g>
+      </g>,
     );
   });
-  for (let i = 0; i < items.length - 1; ++i) {
-    const x0 = items[i].cx;
-    const y0 = items[i].cy;
-    const x1 = items[i + 1].cx;
-    const y1 = items[i + 1].cy;
-    graph.push(
-      <path
-        key={20 + i}
-        d={`M${x0},${y0 + 12}
-            Q${x0},${y0 + 36} ${(x0 + x1) / 2},${(y0 + y1) / 2}
-            Q${x1},${y1 - 36} ${x1},${y1 - 12}`}
-        fill="none"
-        stroke="black"
-      ></path>,
-    );
-  }
   return (
     <>
       <div id="actionbar">
