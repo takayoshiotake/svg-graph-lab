@@ -4,6 +4,7 @@ import './App.css';
 interface GraphItem {
   cx: number;
   cy: number;
+  shape: string;
 }
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       {
         cx,
         cy,
+        shape: 'rect',
       },
     ]);
   }, [items]);
@@ -29,6 +31,7 @@ function App() {
       newItems.push({
         cx,
         cy,
+        shape: 'rect',
       });
     }
     setItems(newItems);
@@ -45,13 +48,20 @@ function App() {
   }, []);
 
   const selectItem = useCallback(
-    (index: number) => {
-      if (selectedItemIndexes.includes(index)) {
-        return;
+    (event: MouseEvent<SVGElement>, index: number) => {
+      if (event.button == 0) {
+        // left button
+        if (selectedItemIndexes.includes(index)) {
+          return;
+        }
+        setSelectedItemIndexes([...selectedItemIndexes, index]);
+      } else if (event.button == 2) {
+        // right button
+        items[index].shape = items[index].shape === 'rect' ? 'circle' : 'rect';
+        setItems([...items]);
       }
-      setSelectedItemIndexes([...selectedItemIndexes, index]);
     },
-    [selectedItemIndexes],
+    [items, selectedItemIndexes],
   );
   const handleMouseMove = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
@@ -93,6 +103,7 @@ function App() {
       const y1 = items[index].cy;
       graph.push(
         <path
+          className="path"
           key={index * 2 + 0}
           d={`M${x0},${y0 + 12}
               Q${x0},${y0 + 36} ${(x0 + x1) / 2},${(y0 + y1) / 2}
@@ -106,17 +117,22 @@ function App() {
       <g
         key={index * 2 + 1}
         transform={`translate(${item.cx}, ${item.cy})`}
-        onMouseDown={() => selectItem(index)}
+        onMouseDown={(event) => selectItem(event, index)}
       >
-        <rect
-          x="-12"
-          y="-12"
-          width="24"
-          height="24"
-          stroke="black"
-          fill="white"
-          rx="8"
-        />
+        {item.shape === 'rect' && (
+          <rect
+            x="-12"
+            y="-12"
+            width="24"
+            height="24"
+            stroke="black"
+            fill="white"
+            rx="8"
+          />
+        )}
+        {item.shape === 'circle' && (
+          <circle r="12" stroke="black" fill="white" rx="8" />
+        )}
         <text textAnchor="middle" dominantBaseline="central">
           {index + 1}
         </text>
@@ -142,6 +158,10 @@ function App() {
       </div>
       <div
         id="grapharea"
+        onContextMenu={(event) => {
+          event.preventDefault();
+          return false;
+        }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
       >
@@ -149,6 +169,7 @@ function App() {
           {[...Array(Math.round(800 / 12)).keys()].map((x) => {
             return (
               <path
+                key={`x${x}`}
                 d={`M${x * 12 - 0.5},0 V600`}
                 stroke="rgba(0, 0, 0, 0.12)"
               ></path>
@@ -157,6 +178,7 @@ function App() {
           {[...Array(Math.round(600 / 12)).keys()].map((y) => {
             return (
               <path
+                key={`y${y}`}
                 d={`M0,${y * 12 - 0.5} H800`}
                 stroke="rgba(0, 0, 0, 0.12)"
               ></path>

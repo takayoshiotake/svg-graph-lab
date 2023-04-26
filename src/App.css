@@ -38,3 +38,12 @@
 #grapharea svg > g > * {
   user-select: none;
 }
+#grapharea svg > g:hover > *:first-child {
+  stroke: #646cff;
+  stroke-width: 2px;
+}
+#grapharea svg > path.path:hover {
+  stroke: #646cff;
+  stroke-width: 2px;
+  outline: 1px dashed black;
+}
